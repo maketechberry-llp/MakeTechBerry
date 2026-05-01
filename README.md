@@ -72,11 +72,20 @@ cd MakeTechBerry
    ```bash
    npm install
    ```
-3. Create a `.env` file in the `server` directory and configure the following environment variables:
-   - `PORT`: The port number for the backend server (e.g., `5000`)
-   - `NODE_ENV`: The environment mode (`development` or `production`)
-   - `MONGO_URI`: Your MongoDB database connection string
-   - `JWT_SECRET`: A secure, secret key for JWT authentication
+3. Create a `.env` file in the `server` directory and configure it with your own secure values:
+   ```env
+   # The port number for the backend server (default: 5000)
+   PORT=<YOUR_PORT_NUMBER>
+   
+   # Set the environment mode (e.g., 'development' or 'production')
+   NODE_ENV=<YOUR_ENVIRONMENT_MODE>
+   
+   # Your MongoDB database connection string
+   MONGO_URI=<YOUR_MONGODB_CONNECTION_STRING>
+   
+   # A secure, random secret key for JWT authentication
+   JWT_SECRET=<YOUR_SECURE_JWT_SECRET>
+   ```
 4. Start the backend development server:
    ```bash
    npm run dev
@@ -129,21 +138,42 @@ To deploy the application for production use, follow these guidelines:
 
 ```text
 MakeTechBerry/
-├── client/                 # Frontend React Application
-│   ├── public/             # Static assets
-│   ├── src/                # UI Components, Pages, Services, and Utilities
-│   ├── tailwind.config.js  # UI Styling configuration
-│   └── vite.config.js      # Bundler configuration
+├── client/                     # Frontend React SPA
+│   ├── public/                 # Static assets (images, icons, etc.)
+│   ├── src/                    # Core frontend source code
+│   │   ├── assets/             # Bundled media files and global CSS
+│   │   ├── components/         # Reusable UI components (Modals, Buttons, Navbars)
+│   │   │   ├── admin/          # Admin-specific components
+│   │   │   ├── common/         # Shared global components
+│   │   │   ├── forms/          # Form inputs and handlers
+│   │   │   └── ui/             # Micro-components and primitives
+│   │   ├── hooks/              # Custom React hooks for state/logic reuse
+│   │   ├── lib/                # External library configurations and wrappers
+│   │   ├── pages/              # Top-level view components (Home, About, Dashboard)
+│   │   ├── services/           # API integration and external data fetching
+│   │   ├── styles/             # Application-specific styling and Tailwind directives
+│   │   ├── utils/              # Helper functions and constants
+│   │   ├── App.jsx             # Root layout and router configuration
+│   │   └── main.jsx            # Application entry point and context providers
+│   ├── tailwind.config.js      # Utility-class design system config
+│   └── vite.config.js          # Build tool and dev server config
 │
-└── server/                 # Backend REST API
-    ├── src/
-    │   ├── controllers/    # Business logic
-    │   ├── models/         # Database schemas
-    │   ├── routes/         # API endpoints
-    │   └── server.js       # Application entry point
-    ├── uploads/            # Secure file storage
-    └── .env                # Environment secrets
+└── server/                     # Backend Node.js REST API
+    ├── src/                    # Core backend logic
+    │   ├── config/             # Environment and database configurations
+    │   ├── controllers/        # Request handlers and business logic implementations
+    │   ├── middlewares/        # Authentication, validation, and error interceptors
+    │   ├── models/             # Mongoose schemas (Users, Projects, Workshops, etc.)
+    │   ├── routes/             # Express API endpoint definitions
+    │   ├── utils/              # Shared backend utilities (hashers, loggers, etc.)
+    │   ├── app.js              # Express application factory and middleware setup
+    │   └── server.js           # HTTP server bootstrapping
+    ├── uploads/                # Secure local storage for user-uploaded media
+    └── .env                    # System environment variables (not tracked in VCS)
 ```
 
 ---
 
+<div align="center">
+  <p>Built with ❤️ by MakeTechBerry</p>
+</div>
