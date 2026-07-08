@@ -1,14 +1,14 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 import connectDB from "./config/db.js";
 import internshipRoutes from "./routes/internship.routes.js";
 import projectRoutes from "./routes/project.routes.js";
 import reportRoutes from "./routes/report.routes.js";
 import messageRoutes from "./routes/message.routes.js";
 import workshopRoutes from "./routes/workshop.routes.js";
-import path from "path";
-import { fileURLToPath } from "url";
 import authRoutes from "./routes/auth.routes.js";
 import {
   createMessage,
@@ -17,11 +17,11 @@ import {
 } from "./controllers/message.controller.js";
 import protect from "./middlewares/auth.middleware.js";
 
-dotenv.config();
-connectDB();
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+dotenv.config({ path: path.resolve(__dirname, "../.env") });
+connectDB();
 const app = express();
 
 app.use(cors());
