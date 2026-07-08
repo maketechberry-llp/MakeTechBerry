@@ -186,7 +186,8 @@ const Dashboard = () => {
     const normalizedPath = resumePath.replace(/\\/g, '/');
     // Ensure path starts with /uploads
     const path = normalizedPath.startsWith('/') ? normalizedPath : `/${normalizedPath}`;
-    return `http://localhost:5000${path}`;
+    const apiBaseUrl = (import.meta.env.VITE_API_URL || "http://localhost:5000").replace(/\/$/, "");
+    return `${apiBaseUrl}${path}`;
   };
 
   // Export to CSV function

@@ -1,7 +1,10 @@
 import mongoose from "mongoose";
 
 const connectDB = async () => {
-  console.log("DEBUG MONGO_URI =", process.env.MONGO_URI);
+  if (!process.env.MONGO_URI) {
+    console.error("MONGO_URI is not configured. Set it in your environment.");
+    process.exit(1);
+  }
 
   try {
     await mongoose.connect(process.env.MONGO_URI);

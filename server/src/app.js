@@ -24,7 +24,21 @@ dotenv.config({ path: path.resolve(__dirname, "../.env") });
 connectDB();
 const app = express();
 
-app.use(cors());
+const allowedOrigins = [process.env.CLIENT_URL, "http://localhost:3000", "http://localhost:5173"].filter(Boolean);
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+        return;
+      }
+
+      callback(new Error("Not allowed by CORS"));
+    },
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 app.use("/api/internships", internshipRoutes);
@@ -47,6 +61,32 @@ console.log("✅ Message routes registered at /api/messages");
 
 app.get("/", (req, res) => {
   res.send("MakeTechBerry Server Running 🚀");
+});
+
+// Serve client build in production when frontend and backend share the same origin
+if (process.env.NODE_ENV === "production") {
+  const clientDist = path.join(__dirname, "../client/dist");
+  app.use(express.static(clientDist));
+
+  app.get("*", (req, res, next) => {
+    // Let API and uploads routes pass through
+    if (req.originalUrl.startsWith("/api") || req.originalUrl.startsWith("/uploads")) {
+      return next();
+    }
+
+    res.sendFile(path.join(clientDist, "index.html"));
+  });
+}
+
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || err.status || 500;
+  const message = process.env.NODE_ENV === "production" ? "Internal Server Error" : err.message;
+
+  res.status(statusCode).json({
+    success: false,
+    message,
+    ...(process.env.NODE_ENV !== "production" && { stack: err.stack }),
+  });
 });
 
 export default app;

@@ -179,7 +179,8 @@ const Internships = () => {
     if (!resumePath) return null;
     const normalizedPath = resumePath.replace(/\\/g, '/');
     const path = normalizedPath.startsWith('/') ? normalizedPath : `/${normalizedPath}`;
-    return `http://localhost:5000${path}`;
+    const apiBaseUrl = (import.meta.env.VITE_API_URL || "http://localhost:5000").replace(/\/$/, "");
+    return `${apiBaseUrl}${path}`;
   };
 
   // Delete internship
