@@ -4,18 +4,27 @@ import jwt from "jsonwebtoken";
 
 // Admin login
 export const adminLogin = async (req, res) => {
-  const { email, password } = req.body;
+  const email = (req.body?.email || "").trim().toLowerCase();
+  const password = (req.body?.password || "").trim();
 
   try {
     const admin = await Admin.findOne({ email });
-    if (!admin) {
+    const isMatch = admin ? await bcrypt.compare(password, admin.password) : false;
+
+    console.log("LOGIN DEBUG", {
+      email,
+      password,
+      adminFound: !!admin,
+      storedHash: admin?.password,
+      isMatch
+    });
+
+    if (!admin || !isMatch) {
       return res.status(401).json({
         success: false,
         message: "Invalid credentials"
       });
     }
-
-    const isMatch = await bcrypt.compare(password, admin.password);
     if (!isMatch) {
       return res.status(401).json({
         success: false,
